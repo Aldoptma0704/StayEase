@@ -1,0 +1,492 @@
+/* Gaya Umum */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+  }
+  
+  /* Gaya untuk header */
+  header {
+    background-color: #f0f0f0; /* Warna latar belakang */
+    border-bottom: 2px solid #007bff; /* Garis bawah dengan warna biru */
+    padding: 10px 20px; /* Padding */
+  }
+  
+  /* Gaya untuk navigasi */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* Gaya untuk logo */
+  nav img {
+    height: 40px; /* Tinggi logo */
+  }
+  
+  /* Gaya untuk daftar navigasi */
+  nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+  }
+  
+  /* Gaya untuk item navigasi */
+  nav ul li {
+    margin-right: 20px;
+  }
+  
+  /* Gaya untuk item navigasi terakhir */
+  nav ul li:last-child {
+    margin-right: 0;
+    margin-left: auto; /* Mendorong item terakhir ke kanan */
+  }
+  
+  /* Gaya untuk tautan navigasi */
+  nav ul li a {
+    text-decoration: none;
+    color: #fff;
+    border-bottom: 2px solid transparent;
+    transition: border-bottom-color 0.3s ease;
+  }
+  
+  /* Gaya untuk tautan navigasi saat di-hover */
+  nav ul li a:hover {
+    border-bottom-color: #fefefe;
+  }
+  
+  /* Gaya untuk tombol LOGIN dan SIGN UP */
+  .login-button, .signup-button {
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .login-button {
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    border: black;
+  }
+  
+  .signup-button {
+    background-color: rgb(23, 79, 152);
+    color: white;
+    border: none;
+  }
+  
+  /* Gaya untuk tombol LOGIN saat di-hover */
+  .login-button:hover {
+    background-color: rgb(23, 79, 152);
+    color: white;
+  }
+  
+  /* Gaya untuk tombol SIGN UP saat di-hover */
+  .signup-button:hover {
+    background-color: rgb(0, 0, 0);
+  }
+  
+
+  .login-section {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 50px;
+    border: 1px solid #000;
+    z-index: 9999;
+    display: none;
+    max-width: 800px;
+    width: 150%;
+    text-align: center;
+    box-shadow: 0 0 50px 10px rgba(0, 0, 0, 0.3); /* Menambahkan shadow */
+  }
+  
+  /* Menampilkan login-section saat aktif */
+  .login-section.active {
+    display: block;
+  }
+  
+  /* Gaya untuk judul login-section */
+  .login-section h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+  
+  /* Gaya untuk paragraf login-section */
+  .login-section p {
+    margin-bottom: 20px;
+  }
+  
+  /* Gaya untuk form di login-section */
+  .login-section form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Gaya untuk label di login-section */
+  .login-section label {
+    display: block;
+    margin-bottom: 5px;
+    text-align: left;
+  }
+  
+  /* Gaya untuk input di login-section */
+  .login-section input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  /* Gaya untuk tombol di login-section */
+  .login-section button {
+    background-color: #264f8d;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Gaya untuk tombol di login-section saat di-hover */
+  .login-section button:hover {
+    background-color: #333;
+  }
+  
+  /* Gaya untuk tautan di login-section */
+  .login-section a {
+    color: #000;
+    text-decoration: none;
+  }
+  
+  /* Gaya untuk tautan di login-section saat di-hover */
+  .login-section a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Gaya Umum untuk Formulir */
+  form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px; /* Sesuaikan sesuai kebutuhan */
+    margin: 0 auto; /* Pusatkan formulir */
+  }
+  
+  /* Gaya Label */
+  .form-label {
+    font-size: 16px; /* Setel ukuran font */
+    margin-bottom: 5px; /* Spasi di bawah label */
+    color: #333; /* Warna teks label */
+  }
+  
+  /* Gaya Input */
+  .form-input {
+    width: 100%; /* Lebar penuh */
+    padding: 10px; /* Padding di dalam input */
+    margin-bottom: 15px; /* Spasi di bawah input */
+    border: 1px solid #ccc; /* Warna border */
+    border-radius: 4px; /* Sudut melengkung */
+    box-sizing: border-box; /* Pastikan padding dan border termasuk dalam total lebar dan tinggi */
+    font-size: 16px; /* Setel ukuran font */
+    height: 40px; /* Sesuaikan tinggi */
+  }
+  
+  /* Gaya Fokus Input */
+  .form-input:focus {
+    border-color: #007bff; /* Ubah warna border saat fokus */
+    outline: none; /* Hapus outline */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Tambah bayangan */
+  }
+  
+  /* Gaya teks hitam */
+  .text-black {
+    color: black;
+  }
+  
+  /* Gaya teks biru */
+  .text-blue {
+    color: rgb(31, 85, 155);
+  }
+  
+  /* Informasi Hotel */
+  .hotel-info {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1400px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Gaya untuk gambar hotel */
+  .hotel-image img {
+    width: 95%;
+    border-radius: 10px 0 0 10px;
+  }
+  
+  /* Gaya untuk detail hotel */
+  .hotel-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  /* Gaya untuk judul hotel */
+  .hotel-details h2 {
+    margin-top: 0;
+    border-bottom: 1px solid #000;
+    padding-bottom: 10px;
+    font-size: 24px;
+  }
+  
+  /* Gaya untuk gambar bintang hotel */
+  .hotel-details .star-image {
+    width: 95px;
+    height: auto;
+    display: block;
+    margin: 10px 0;
+  }
+  
+  /* Gaya untuk paragraf hotel */
+  .hotel-details p {
+    margin-bottom: 10px;
+  }
+  
+  /* Gaya untuk item detail hotel */
+  .detail-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  /* Gaya untuk gambar detail item */
+  .detail-item img {
+    margin-right: 10px;
+    width: 30px;
+    height: 30px;
+  }
+  
+  /* Media query untuk responsivitas */
+  @media (max-width: 768px) {
+    .hotel-info {
+      flex-direction: column;
+    }
+  
+    .hotel-image,
+    .hotel-details {
+      width: 100%;
+      border-radius: 10px;
+    }
+  
+    .hotel-image {
+      border-radius: 10px 10px 0 0;
+    }
+  }
+  
+  /* Gaya untuk kontainer gambar */
+  .image-container {
+    position: relative; /* Mengatur posisi relatif */
+    width: 300px; /* Sesuaikan lebar gambar */
+  }
+  
+  /* Gaya untuk teks di dalam kontainer gambar */
+  .image-container p {
+    position: absolute; /* Mengatur posisi absolut */
+    bottom: 0; /* Posisikan di bagian bawah */
+    left: 0; /* Posisikan di bagian kiri */
+    color: white; /* Warna teks */
+    padding: 5px 10px; /* Padding */
+    margin: 0; /* Margin nol */
+  }
+  
+  .rooms-container {
+    display: flex;
+    align-items: center; /* Mengatur kontainer agar sejajar secara vertikal */
+    gap: 20px;
+    justify-content: flex-start; /* Ubah ini untuk meratakan elemen dari kanan ke kiri */
+    overflow-x: auto;
+  }
+  
+  /* Tetap pertahankan gaya yang ada untuk .room-info dan anak-anaknya */
+  .room-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 300px;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 10px;
+    flex: 0 0 auto;
+  }
+  
+  /* Gambar Kamar */
+  .room-image img {
+    width: 100%; /* Lebar penuh */
+    border-radius: 10px 10px 0 0; /* Sudut melengkung untuk bagian atas */
+    cursor: pointer; /* Pointer cursor for clickable images */
+  }
+  
+  /* Lightbox Modal */
+  .lightbox {
+    display: none;
+    position
+  
+  : fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Shadow background */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Ensure it appears on top */
+  }
+  
+  /* Gambar dalam Lightbox */
+  .lightbox-image {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+  }
+  
+  /* Detail Kamar */
+  .room-details {
+    width: 100%; /* Lebar penuh */
+    text-align: left; /* Rata kiri */
+    padding: 10px; /* Tambah padding */
+  }
+  
+  /* Detail Kamar - Judul */
+  .room-details h2 {
+    margin-top: 10px;
+    font-size: 24px;
+  }
+  
+  /* Detail Kamar - Harga */
+  .room-details .price {
+    color: blue; /* Ubah warna menjadi biru */
+    margin: 10px 0;
+  }
+  
+  /* Detail Kamar - Paragraf */
+  .room-details p {
+    margin: 1px 0;
+  }
+  
+  /* Fitur */
+  .features {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* Rata kiri fitur */
+  }
+  
+  /* Item Fitur */
+  .feature {
+    display: flex;
+    align-items: center;
+    margin: 5px;
+  }
+  
+  /* Gambar Fitur */
+  .feature img {
+    width: 30px;
+    margin-right: 5px;
+  }
+  
+  /* Tombol */
+  .buttons {
+    display: flex;
+    justify-content: flex-end; /* Rata kanan tombol */
+    gap: 10px; /* Spasi antar tombol */
+  }
+  
+  /* Gaya untuk tombol di dalam .rooms-container */
+  .rooms-container button {
+    background-color: #c4efd9;
+    color: rgb(44, 156, 55);
+    padding: 5px 5px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  /* Gaya untuk tombol di dalam .rooms-container saat di-hover */
+  .rooms-container button:hover {
+    background-color: #f4faf4;
+  }
+  
+  /* Gaya untuk paragraf dalam tombol */
+  button p {
+    margin: 0;
+  }
+  
+  /* Bagian Selamat Datang */
+  .welcome_section {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  /* Gambar logo */
+  .logo-image {
+    width: 200px;
+    height: auto;
+  }
+  
+  /* Gaya untuk carousel */
+  .carousel {
+    display: flex;
+    overflow-x: auto; /* Membuat carousel bisa di-scroll secara horizontal */
+    scroll-snap-type: x mandatory; /* Membuat setiap gambar "snap" ke posisi yang tepat */
+  }
+  
+  /* Gaya untuk kontainer gambar dalam carousel */
+  .image-container {
+    flex: 0 0 auto; /* Membuat gambar container berukuran tetap */
+    width: 100%; /* Mengisi lebar carousel */
+    scroll-snap-align: start; /* Memastikan setiap gambar muncul di awal carousel saat scrolling */
+  }
+  
+  /* Gaya untuk gambar dalam carousel */
+  .image-container img {
+    width: 100%; /* Mengisi lebar gambar */
+    height: auto; /* Menjaga rasio aspek gambar */
+  }
+  
+  /* Gaya untuk panah navigasi sebelumnya */
+  .prev {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: white;
+    font-size: 24px;
+    z-index: 9999; /* Pastikan panah muncul di atas gambar */
+    left: 10px;
+  }
+  
+  /* Gaya untuk panah navigasi berikutnya */
+  .next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: white;
+    font-size: 24px;
+    z-index: 9999; /* Pastikan panah muncul di atas gambar */
+    right: 10px;
+  }
+  
