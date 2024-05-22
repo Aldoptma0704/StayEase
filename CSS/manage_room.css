@@ -256,3 +256,9 @@ main {
     color: white;
     background-color: rgb(23, 79, 152);
 }
+
+.room-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}

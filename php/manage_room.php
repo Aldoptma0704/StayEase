@@ -12,8 +12,11 @@ if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
     $result = $conn->query("SELECT image FROM rooms WHERE id=$id");
     $row = $result->fetch_assoc();
-    if (file_exists($row['image'])) {
-        unlink($row['image']);
+    $images = explode(',', $row['image']);
+    foreach ($images as $img) {
+        if (file_exists($img)) {
+            unlink($img);
+        }
     }
     $conn->query("DELETE FROM rooms WHERE id=$id");
     header("location: manage_room.php");
@@ -25,34 +28,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $type = $_POST['type'];
     $price = $_POST['price'];
     $availability = $_POST['availability'];
-    $image_path = '';
+    $image_paths = [];
 
-    // Handle image upload
-    if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+    // Handle multiple image uploads
+    if (isset($_FILES['images'])) {
         $target_dir = "uploads/";
         if (!is_dir($target_dir)) {
             mkdir($target_dir, 0777, true); // Create uploads directory if it doesn't exist
         }
-        $image_path = $target_dir . basename($_FILES["image"]["name"]);
-        move_uploaded_file($_FILES["image"]["tmp_name"], $image_path);
-    } else {
-        $image_path = $_POST['existing_image'];
+        
+        foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
+            if ($_FILES['images']['error'][$key] == UPLOAD_ERR_OK) {
+                $target_file = $target_dir . basename($_FILES['images']['name'][$key]);
+                move_uploaded_file($tmp_name, $target_file);
+                $image_paths[] = $target_file;
+            }
+        }
     }
 
+    // If updating an existing room, retain the old images and add new ones
     if (!empty($_POST['room_id'])) {
-        // Update existing room
         $room_id = $_POST['room_id'];
-        if ($image_path === '') {
-            $stmt = $conn->prepare("UPDATE rooms SET type=?, price=?, availability=? WHERE id=?");
-            $stmt->bind_param("sdis", $type, $price, $availability, $room_id);
+        if (empty($image_paths)) {
+            $image_paths = $_POST['existing_images'];
         } else {
-            $stmt = $conn->prepare("UPDATE rooms SET type=?, price=?, availability=?, image=? WHERE id=?");
-            $stmt->bind_param("sdisi", $type, $price, $availability, $image_path, $room_id);
+            if (!empty($_POST['existing_images'])) {
+                $existing_images = explode(',', $_POST['existing_images']);
+                $image_paths = array_merge($existing_images, $image_paths);
+            }
+            $image_paths = implode(',', $image_paths);
         }
+
+        $stmt = $conn->prepare("UPDATE rooms SET type=?, price=?, availability=?, image=? WHERE id=?");
+        $stmt->bind_param("sdisi", $type, $price, $availability, $image_paths, $room_id);
     } else {
         // Insert new room
+        $image_paths = implode(',', $image_paths);
         $stmt = $conn->prepare("INSERT INTO rooms (type, price, availability, image) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("sdis", $type, $price, $availability, $image_path);
+        $stmt->bind_param("sdis", $type, $price, $availability, $image_paths);
     }
 
     $stmt->execute();
@@ -60,7 +73,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     header("location: manage_room.php");
     exit;
 }
-
 
 // Fetch rooms data
 $rooms = $conn->query("SELECT * FROM rooms");
@@ -130,7 +142,13 @@ if (isset($_GET['edit'])) {
                                     <input type="hidden" name="room_id" value="<?php echo $edit_room ? $edit_room['id'] : ''; ?>">
                                     <div class="form-group">
                                         <label for="type">Type</label>
-                                        <input type="text" class="form-control" id="type" name="type" placeholder="Enter room type" value="<?php echo $edit_room ? $edit_room['type'] : ''; ?>">
+                                        <select class="form-control custom-select" id="type" name="type">
+                                            <option value="Superior Room" <?php if($edit_room && $edit_room['type'] == 'Superior Room') echo 'selected'; ?>>Superior Room</option>
+                                            <option value="Deluxe Room" <?php if($edit_room && $edit_room['type'] == 'Deluxe Room') echo 'selected'; ?>>Deluxe Room</option>
+                                            <option value="Junior Room" <?php if($edit_room && $edit_room['type'] == 'Junior Room') echo 'selected'; ?>>Junior Room</option>
+                                            <option value="Executive Suite" <?php if($edit_room && $edit_room['type'] == 'Executive Suite') echo 'selected'; ?>>Executive Suite</option>
+                                            <option value="Executive Studio" <?php if($edit_room && $edit_room['type'] == 'Executive Studio') echo 'selected'; ?>>Executive Studio</option>
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="price">Price</label>
@@ -141,11 +159,16 @@ if (isset($_GET['edit'])) {
                                         <input type="number" class="form-control" id="availability" name="availability" placeholder="Enter room availability" value="<?php echo $edit_room ? $edit_room['availability'] : ''; ?>">
                                     </div>
                                     <div class="form-group">
-                                        <label for="image">Image</label>
-                                        <input type="file" class="form-control" id="image" name="image">
-                                        <input type="hidden" name="existing_image" value="<?php echo $edit_room ? $edit_room['image'] : ''; ?>">
+                                        <label for="image">Images</label>
+                                        <input type="file" class="form-control" id="image" name="images[]" multiple>
+                                        <input type="hidden" name="existing_images" value="<?php echo $edit_room ? $edit_room['image'] : ''; ?>">
                                         <?php if ($edit_room && $edit_room['image']): ?>
-                                            <img src="<?php echo $edit_room['image']; ?>" alt="Room Image" style="width:100px;">
+                                            <?php 
+                                                $images = explode(',', $edit_room['image']); 
+                                                foreach ($images as $img): 
+                                            ?>
+                                                <img src="<?php echo $img; ?>" alt="Room Image" class="room-image">
+                                            <?php endforeach; ?>
                                         <?php endif; ?>
                                     </div>
                                 </div>
@@ -168,7 +191,7 @@ if (isset($_GET['edit'])) {
                                             <th>Type</th>
                                             <th>Price</th>
                                             <th>Availability</th>
-                                            <th>Image</th>
+                                            <th>Images</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -179,7 +202,14 @@ if (isset($_GET['edit'])) {
                                             <td><?php echo $row['type']; ?></td>
                                             <td><?php echo $row['price']; ?></td>
                                             <td><?php echo $row['availability']; ?></td>
-                                            <td><img src="<?php echo $row['image']; ?>" alt="Room Image" style="width:100px;"></td>
+                                            <td>
+                                                <?php 
+                                                    $images = explode(',', $row['image']); 
+                                                    foreach ($images as $img): 
+                                                ?>
+                                                    <img src="<?php echo $img; ?>" alt="Room Image" class="room-image">
+                                                <?php endforeach; ?>
+                                            </td>
                                             <td>
                                                 <a href="manage_room.php?edit=<?php echo $row['id']; ?>" class="btn btn-warning">Edit</a>
                                                 <button onclick="confirmDelete(<?php echo $row['id']; ?>)" class="btn btn-danger">Delete</button>
