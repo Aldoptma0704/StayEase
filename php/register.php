@@ -8,6 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $lastName = $_POST['lastName'];
     $mobilePhone = $_POST['mobilePhone'];
     $email = $_POST['email'];
+    $username = $_POST['username'];
     $birthDate = $_POST['birthDate'];
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirmPassword'];
@@ -20,8 +21,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         // Prepare and bind
-        $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, mobile_phone, email, birth_date, password) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssss", $firstName, $lastName, $mobilePhone, $email, $birthDate, $hashedPassword);
+        $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, mobile_phone, email, username, birth_date, password) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssss", $firstName, $lastName, $mobilePhone, $email, $username, $birthDate, $hashedPassword);
 
         // Execute the statement
         if ($stmt->execute()) {
@@ -71,12 +72,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <?php if ($message): ?>
           <p><?php echo $message; ?></p>
       <?php endif; ?>
-      <form action="verification.php" method="post">
+      <form action="register.php" method="post">
           <label for="firstName">Profile Information</label>
           <input type="text" id="firstName" name="firstName" placeholder="First Name" required>
           <input type="text" id="lastName" name="lastName" placeholder="Last Name" required>
           <input type="tel" id="mobilePhone" name="mobilePhone" placeholder="Mobile Phone" required>
           <input type="email" id="email" name="email" placeholder="Email" required>
+          <input type="text" id="username" name="username" placeholder="Username" required>
           <label for="birthDate">Birth Date (MM-DD-YY)</label>
           <input type="date" id="birthDate" name="birthDate" required>
           <label for="password">Password</label>

@@ -1,32 +1,37 @@
 <?php
 session_start();
 include('Koneksi.php');
+$error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $username = isset($_POST['username']) ? $_POST['username'] : '';
+    $password = isset($_POST['password']) ? $_POST['password'] : '';
 
-    $sql = "SELECT * FROM users WHERE username='$username'";
-    $result = $conn->query($sql);
+    if (!empty($username) && !empty($password)) {
+        $sql = "SELECT * FROM users WHERE username='$username'";
+        $result = $conn->query($sql);
 
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        if (password_verify($password, $row['password'])) {
-            $_SESSION['login_user'] = $username;
-            $_SESSION['is_admin'] = $row['is_admin'];
-            
-            // Redirect based on user role
-            if ($row['is_admin'] == 1) {
-                header("Location: dashboard.php"); // Redirect to admin dashboard
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if (password_verify($password, $row['password'])) {
+                $_SESSION['login_user'] = $username;
+                $_SESSION['is_admin'] = $row['is_admin'];
+
+                // Redirect based on user role
+                if ($row['is_admin'] == 1) {
+                    header("Location: dashboard.php"); // Redirect to admin dashboard
+                } else {
+                    header("Location: HomePage.php"); // Redirect to user homepage
+                }
+                exit();
             } else {
-                header("Location: HomePage.php"); // Redirect to user homepage
+                $error = "Invalid password.";
             }
-            exit();
         } else {
-            $error = "Invalid password.";
+            $error = "No user found.";
         }
     } else {
-        $error = "No user found.";
+        $error = "Please enter both username and password.";
     }
 }
 ?>

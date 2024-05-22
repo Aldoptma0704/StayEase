@@ -9,7 +9,6 @@ if (!$email) {
     exit();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,11 +29,10 @@ if (!$email) {
         <img src="../IMG/verify.svg" alt="Verification Image" style="display: block; margin: 0 auto; width: 200px; height: auto;">
         <p style="text-align: center;">Verify your email</p>
         <p style="text-align: center;">We have sent an email to <?php echo $email; ?> to confirm the validity of your email address. After receiving the email, follow the link provided to complete your registration.</p>
-        <form action="confirmation.php" method="post" style="text-align: center;">
+        <form action="login.php" method="post" style="text-align: center;">
             <input type="hidden" name="email" value="<?php echo $email; ?>">
             <button type="submit">Confirm Email</button>
         </form>
     </div>
 </body>
 </html>
-
