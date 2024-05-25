@@ -1,0 +1,640 @@
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+}
+
+/* Header Styles */
+header {
+  background-color: #ffffff;
+  border-bottom: 2px solid #007bff;
+  padding: 10px 10px;
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 10px;
+  width: 100%;
+}
+
+nav .logo {
+  height: auto; /* Change height to auto */
+  max-width: 100px; /* Add max-width */
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: right;
+}
+
+nav ul li {
+  margin-left: 20px; /* Adjust margin */
+}
+
+nav ul li.spacer {
+  flex-grow: 1;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  padding: 10px 15px;
+}
+
+nav ul li a:hover {
+  background-color: #e0e0e0;
+  border-radius: 5px;
+}
+
+nav .icon {
+  height: 30px;
+  padding-right: 30px; /* Adjust padding */
+}
+
+/* Adjustments for Home and History links */
+nav ul li .home {
+  margin-left: 900px;
+}
+
+nav ul li .history {
+  margin-right: 20px; /* Adjust margin */
+}
+
+  .form-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 70%;
+    margin: 0 auto;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 30px; /* Adjust this value for spacing between form groups */
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+    box-sizing: border-box;
+  }
+  .form-group:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 50px;
+    background-color: #ccc;
+  }
+  .form-group label {
+    margin-bottom: 5px;
+    white-space: nowrap;
+    align-self: start;
+  }
+  .form-group div {
+    display: flex;
+    align-items: center;
+    align-self: start;
+  }
+  .form-group input,
+  .form-group select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .search-button {
+    background-color: #225abb;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 3px;
+    white-space: nowrap;
+    align-self: flex-end;
+  }
+  .search-button:hover {
+    background-color: #000000;
+  }
+  .calendar-logo {
+    margin-right: 5px;
+  }
+  @media (max-width: 768px) {
+    .form-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .form-group {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    .form-group:not(:last-child)::after {
+        display: none;
+    }
+    .search-button {
+        width: 100%;
+        align-self: center;
+    }
+  }
+  
+  /* Gaya Umum untuk Formulir */
+  form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  /* Gaya Label */
+  .form-label {
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  /* Gaya Input */
+  .form-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+    height: 40px;
+  }
+  
+  .form-input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Gaya teks hitam */
+  .text-black {
+    color: black;
+  }
+  
+  /* Gaya teks biru */
+  .text-blue {
+    color: rgb(31, 85, 155);
+  }
+  
+  /* General styles for the hotel details container */
+  .hotel-details {
+    font-family: Arial, sans-serif;
+    padding: 10px;
+    max-width: 1600px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .header {
+    display: flex;
+    align-items: center;
+    padding-top: 2%;
+    margin-bottom: 10px; /* Mengatur jarak bawah */
+    margin-left: 30px;
+  }
+  
+  .header h2 {
+    margin: 0;
+  }
+  
+  .star-image {
+    margin-left: 10px;
+    width: 100px;
+    height: auto;
+  }
+  
+  .detail-item {
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+  }
+  
+  .detail-item img {
+    margin-right: 5px;
+  }
+  
+  .detail-item span {
+    white-space: nowrap;
+  }
+  
+  .hotel-info {
+    width: 80%;
+    max-width: 1000px;
+  }
+  
+  .carousel {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .hotel-info {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .container {
+    display: flex;
+    width: 100%;
+    gap: 10px; /* Space between the columns */
+    justify-content: center; /* Center vertically */
+    align-items: center
+    
+  }
+  .large-box {
+    flex: 0 0 37%; /* 60% width of the container */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center vertically */
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  .small-box {
+    flex: 0 0 18%; /* 40% width of the container */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center vertically */
+    gap: 10px; /* Space between the top and bottom boxes */
+  }
+  .small-box .box {
+    flex: 1;
+  }
+  .image-container {
+    position: relative;
+  }
+  .image-container img {
+    width: 100%;
+    height: auto;
+    object-fit: cover; /* Ensure the image covers the entire container */
+    display: block;
+    cursor: pointer; /* Change cursor to pointer on hover */
+  }
+  
+  .image-container {
+    position: relative;
+  }
+  
+  .image-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .lightbox-image {
+    max-width: 90%;
+    max-height: 80%;
+    margin-bottom: 10px;
+  }
+  
+  .lightbox p {
+    color: white;
+    font-size: 1.2em;
+  }
+  
+  /* Gaya untuk kontainer gambar */
+  .image-container {
+    position: relative;
+    width: 250px;
+  }
+  
+  .image-container p {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    color: white;
+    padding: 5px 10px;
+    margin: 0;
+  }
+  
+/* Gaya untuk kontainer kamar */
+.rooms-container {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  overflow-x: auto;
+  width: auto;
+  height: auto;
+}
+
+.room-info {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 20px; /* Adjust the space between room containers */
+  background-size: cover; /* Set the background size */
+  background-color: #f5f5f5; /* Light gray background color */
+  padding: 20px; /* Padding inside each room container */
+  border-radius: 10px; /* Rounded corners for each room container */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for a raised effect */
+  overflow: hidden;
+  width: 1500px;
+  position: -ms-page;
+}
+
+.room-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 30%;
+}
+
+.room-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px 10px 0 0;
+  cursor: pointer;
+}
+
+.room-details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-left: 20px;
+}
+
+.features {
+  display: flex;
+  gap: 20px;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+}
+
+.feature img {
+  margin-right: 10px;
+  width: 30px;
+  height: 30px;
+}
+
+.room-description {
+  display: flex;
+  flex: 1;
+  min-width: 300px;
+  gap: 20px;
+}
+
+.description-column {
+  margin-bottom: 20px;
+  flex: 1;
+}
+
+.description-column h3 {
+  margin-top: 0;
+}
+
+.description-column ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.description-column ul li {
+  margin-bottom: 5px;
+}
+
+.room-options {
+  flex-direction: column;
+  flex: 1;
+  min-width: 300px;
+  padding-left: 20px;
+  border-left: 1px solid #ccc;
+  gap: 5px;
+  margin-top: -180px;
+}
+
+.option {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+}
+
+.option .price {
+  color: blue;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.option button {
+  background-color: #264f8d;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.option button:hover {
+  background-color: #333;
+}
+
+.room-info.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.buttons button {
+  background-color: #c4efd9;
+  color: rgb(44, 156, 55);
+  padding: 5px 10px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.buttons button:hover {
+  background-color: #f4faf4;
+}
+
+.buttons p {
+  margin: 0;
+}
+
+  /* Gaya untuk carousel */
+  .carousel {
+    display: flex;
+    width: 1200px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+  
+  .image-container {
+    flex: 0 0 auto;
+    width: 100%;
+    scroll-snap-align: start;
+  }
+  
+  .image-container img {
+    width: 100%;
+    height: auto;
+  }
+  
+  /* Lightbox Modal */
+  .lightbox {
+    /* your existing styles */
+    position: relative; /* Untuk membuat posisi absolut tombol navigasi relatif terhadap lightbox */
+  }
+  
+  /* Gaya untuk tombol navigasi di dalam lightbox */
+  .prev,
+  .next {
+    position: absolute;
+    top: 50%;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    transform: translateY(-50%);
+    z-index: 10000;
+  }
+  
+  
+  .prev {
+    left: 10px;
+  }
+  
+  .next {
+    right: 10px;
+  }
+  
+  
+  /* Lightbox Modal */
+  .lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  
+  .lightbox-image {
+    max-width: 60%;
+    max-height: 60%;
+    border-radius: 10px;
+  }
+  
+  /* Mobile Responsiveness */
+  @media (max-width: 600px) {
+    .header h2 {
+      font-size: 20px;
+    }
+  
+    .star-image {
+      width: 60px;
+    }
+  
+    .rooms-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .room-info {
+      width: 100%;
+    }
+  
+    .carousel {
+      flex-direction: column;
+    }
+  
+    .image-container img {
+      width: 100%;
+    }
+  
+    .carousel .image-container {
+      flex: 0 0 100%;
+    }
+  }
+  
+  /* Footer */
+  .footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .feature-column {
+    width: calc(25% - 20px); /* 4 columns with 20px space between */
+    margin-bottom: 20px;
+  }
+  
+  .feature-item {
+    text-align: center; /* Pusatkan konten dalam kotak */
+    padding: 15px; /* Berikan ruang di sekitar konten */
+    border: 1px solid #ccc; /* Berikan garis pinggir */
+    border-radius: 5px; /* Buat sudut kotak sedikit melengkung */
+  }
+  
+  .feature-item img {
+    max-width: 50px; /* Sesuaikan ukuran gambar */
+    margin-bottom: 10px; /* Jarak antara gambar dan teks */
+  }
+  
+  .feature-item p {
+    margin: 0; /* Hilangkan margin default */
+    font-size: 14px;
+    color: #333; /* Warna teks */
+  }
+  
+  .feature-column button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: #f0f0f0; /* Warna latar belakang */
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .feature-column button:hover {
+    background-color: #e0e0e0; /* Warna latar belakang saat dihover */
+  }
+  
+  .feature-content {
+    display: flex;
+    align-items: center;
+  }
+  
+  .feature-content img {
+    max-width: 30px; /* Sesuaikan dengan ukuran ikon */
+    margin-right: 10px; /* Jarak antara ikon dan teks */
+  }
+  
+  .feature-content p {
+    margin: 0; /* Hilangkan margin default */
+    font-size: 14px;
+    color: #333; /* Warna teks */
+  }
+  

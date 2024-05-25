@@ -10,15 +10,13 @@ include('Koneksi.php');
 // Handle delete room
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
-    $result = $conn->query("SELECT image FROM rooms WHERE id=$id");
-    $row = $result->fetch_assoc();
-    $images = explode(',', $row['image']);
-    foreach ($images as $img) {
-        if (file_exists($img)) {
-            unlink($img);
-        }
-    }
+    
+    // Hapus ketersediaan kamar terlebih dahulu
+    $conn->query("DELETE FROM room_availability WHERE room_id=$id");
+
+    // Hapus kamar
     $conn->query("DELETE FROM rooms WHERE id=$id");
+    
     header("location: manage_room.php");
     exit;
 }
@@ -59,17 +57,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $image_paths = implode(',', $image_paths);
         }
 
-        $stmt = $conn->prepare("UPDATE rooms SET type=?, price=?, availability=?, image=? WHERE id=?");
+        $stmt = $conn->prepare("UPDATE rooms SET room_type=?, price_per_night=?, availability=?, image=? WHERE id=?");
         $stmt->bind_param("sdisi", $type, $price, $availability, $image_paths, $room_id);
+        $stmt->execute();
+        $stmt->close();
     } else {
         // Insert new room
         $image_paths = implode(',', $image_paths);
-        $stmt = $conn->prepare("INSERT INTO rooms (type, price, availability, image) VALUES (?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO rooms (room_type, price_per_night, availability, image) VALUES (?, ?, ?, ?)");
         $stmt->bind_param("sdis", $type, $price, $availability, $image_paths);
+        $stmt->execute();
+        $room_id = $stmt->insert_id;
+        $stmt->close();
     }
 
-    $stmt->execute();
+    // Handle room availability based on dates
+    $dates = $_POST['dates'];
+    $availabilities = $_POST['availabilities'];
+    foreach ($dates as $index => $date) {
+        $is_available = isset($availabilities[$index]) ? 1 : 0;
+        $stmt = $conn->prepare("REPLACE INTO room_availability (room_id, date, is_available) VALUES (?, ?, ?)");
+        $stmt->bind_param("isi", $room_id, $date, $is_available);
+        $stmt->execute();
+    }
     $stmt->close();
+
     header("location: manage_room.php");
     exit;
 }
@@ -86,6 +98,11 @@ $edit_room = null;
 if (isset($_GET['edit'])) {
     $id = $_GET['edit'];
     $edit_room = $conn->query("SELECT * FROM rooms WHERE id=$id")->fetch_assoc();
+    $availability_result = $conn->query("SELECT * FROM room_availability WHERE room_id=$id");
+    $availability_data = [];
+    while ($row = $availability_result->fetch_assoc()) {
+        $availability_data[] = $row;
+    }
 }
 ?>
 
@@ -143,16 +160,16 @@ if (isset($_GET['edit'])) {
                                     <div class="form-group">
                                         <label for="type">Type</label>
                                         <select class="form-control custom-select" id="type" name="type">
-                                            <option value="Superior Room" <?php if($edit_room && $edit_room['type'] == 'Superior Room') echo 'selected'; ?>>Superior Room</option>
-                                            <option value="Deluxe Room" <?php if($edit_room && $edit_room['type'] == 'Deluxe Room') echo 'selected'; ?>>Deluxe Room</option>
-                                            <option value="Junior Room" <?php if($edit_room && $edit_room['type'] == 'Junior Room') echo 'selected'; ?>>Junior Room</option>
-                                            <option value="Executive Suite" <?php if($edit_room && $edit_room['type'] == 'Executive Suite') echo 'selected'; ?>>Executive Suite</option>
-                                            <option value="Executive Studio" <?php if($edit_room && $edit_room['type'] == 'Executive Studio') echo 'selected'; ?>>Executive Studio</option>
+                                            <option value="Superior Room" <?php if($edit_room && $edit_room['room_type'] == 'Superior Room') echo 'selected'; ?>>Superior Room</option>
+                                            <option value="Deluxe Room" <?php if($edit_room && $edit_room['room_type'] == 'Deluxe Room') echo 'selected'; ?>>Deluxe Room</option>
+                                            <option value="Junior Room" <?php if($edit_room && $edit_room['room_type'] == 'Junior Room') echo 'selected'; ?>>Junior Room</option>
+                                            <option value="Executive Suite" <?php if($edit_room && $edit_room['room_type'] == 'Executive Suite') echo 'selected'; ?>>Executive Suite</option>
+                                            <option value="Executive Studio" <?php if($edit_room && $edit_room['room_type'] == 'Executive Studio') echo 'selected'; ?>>Executive Studio</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="price">Price</label>
-                                        <input type="number" class="form-control" id="price" name="price" placeholder="Enter room price" value="<?php echo $edit_room ? $edit_room['price'] : ''; ?>">
+                                        <input type="number" class="form-control" id="price" name="price" placeholder="Enter room price" value="<?php echo $edit_room ? $edit_room['price_per_night'] : ''; ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="availability">Availability</label>
@@ -171,6 +188,16 @@ if (isset($_GET['edit'])) {
                                             <?php endforeach; ?>
                                         <?php endif; ?>
                                     </div>
+                                    <!-- Ketersediaan Kamar Berdasarkan Tanggal -->
+                                    <div class="form-group">
+                                        <label for="dates">Dates (YYYY-MM-DD)</label>
+                                        <input type="text" class="form-control" id="dates" name="dates[]" placeholder="Enter dates separated by commas">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="availabilities">Availabilities (1 for available, 0 for not available)</label>
+                                        <input type="text" class="form-control" id="availabilities" name="availabilities[]" placeholder="Enter availabilities separated by commas">
+                                    </div>
+                                    <!-- Akhir dari Ketersediaan Kamar Berdasarkan Tanggal -->
                                 </div>
                                 <div class="card-footer">
                                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -199,8 +226,8 @@ if (isset($_GET['edit'])) {
                                         <?php while($row = $rooms->fetch_assoc()): ?>
                                         <tr>
                                             <td><?php echo $row['id']; ?></td>
-                                            <td><?php echo $row['type']; ?></td>
-                                            <td><?php echo $row['price']; ?></td>
+                                            <td><?php echo $row['room_type']; ?></td>
+                                            <td><?php echo $row['price_per_night']; ?></td>
                                             <td><?php echo $row['availability']; ?></td>
                                             <td>
                                                 <?php 
@@ -238,5 +265,11 @@ if (isset($_GET['edit'])) {
         </div>
     </div>
 
+    <script>
+        // JavaScript untuk input tanggal dan ketersediaan
+        document.addEventListener('DOMContentLoaded', function() {
+            // Implementasi tambahan jika diperlukan
+        });
+    </script>
 </body>
 </html>

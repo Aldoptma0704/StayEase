@@ -1,41 +1,52 @@
 <?php
-include('Koneksi.php');
+// Koneksi ke database
+$sarvername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "hotel_management";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $check_in = $_POST['check_in'];
-    $check_out = $_POST['check_out'];
-    $rooms = $_POST['rooms'];
+$conn = new mysqli($sarvername, $username, $password, $dbname);
 
-    // Query untuk mendapatkan kamar yang tersedia
-    $sql = "SELECT * FROM rooms WHERE id NOT IN (
-                SELECT room_id FROM room_availability 
-                WHERE (check_in <= '$check_out' AND check_out >= '$check_in')
-            ) LIMIT $rooms";
+if ($conn->connect_error) {
+    die("Connection failed: ".$conn->connect_error);
+}
 
+// Fungsi untuk mengambil data kamar dari database
+function getRooms($conn) {
+    $sql = "SELECT * FROM rooms";
     $result = $conn->query($sql);
-
+    $rooms = array();
     if ($result->num_rows > 0) {
-        echo "<h2>Kamar Tersedia</h2>";
         while($row = $result->fetch_assoc()) {
-            echo "<div class='room-info'>";
-            echo "<div class='room-image'><img src='../IMG/" . $row['image'] . "' alt='Gambar kamar hotel' class='lightbox-trigger'><p>" . $row['description'] . "</p></div>";
-            echo "<div class='room-details'><h2>" . $row['room_type'] . "</h2><p class='price'>Rp " . $row['price_per_night'] . "/ night</p>";
-            echo "<div class='features'>";
-            echo "<div class='feature'><img src='../IMG/Mask group.svg' alt='Twin Bed'><p>" . $row['bed_type'] . "</p></div>";
-            echo "<div class='feature'><img src='../IMG/Mask group (1).svg' alt='Guests'><p>" . $row['max_guests'] . " guests</p></div>";
-            echo "<div class='feature'><img src='../IMG/Mask group (2).svg' alt='Area'><p>" . $row['area'] . " m²</p></div>";
-            echo "</div>";
-            echo "<div class='buttons'><button><p>Shower</p></button><button><p>Refrigerator</p></button><button><p>Air conditioning</p></button></div>";
-            echo "</div>";
-            echo "</div>";
+            $rooms[] = $row;
         }
-    } else {
-        echo "Tidak ada kamar yang tersedia untuk tanggal yang dipilih.";
+    }
+    return $rooms;
+}
+
+// Fungsi untuk menampilkan opsi kamar pada elemen select di halaman web
+function displayRoomOptions($rooms) {
+    foreach ($rooms as $room) {
+        echo "<option value='".$room['type']."'>".$room['type']."</option>";
     }
 }
+
+// Fungsi untuk menampilkan kamar-kamar pada halaman web
+function displayRooms($rooms) {
+    foreach ($rooms as $room) {
+        echo "<div class='room-info'>";
+        echo "<div class='room-details'>";
+        echo "<h2>".$room['type']."</h2>";
+        echo "<p class='price'>Rp ".$room['price']."/night</p>";
+        // Tambahkan informasi dan tombol-tombol lainnya di sini sesuai kebutuhan
+        echo "</div>";
+        echo "</div>";
+    }
+}
+
+// Ambil semua kamar dari database
+$rooms = getRooms($conn);
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -43,19 +54,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>StayEase Hotels</title>
-  <link rel="stylesheet" href="../CSS/HomePage.css">
+  <link rel="stylesheet" href="../CSS/Home Page.css">
 </head>
 <body>
   <header>
     <nav>
-        <img src="../IMG/Logo.png" alt="Logo" class="logo">
-        <ul>
-            <li class="spacer"></li>
-            <li><a href="Regist.html" class="home" id="Home">Home</a></li>
-            <li><a href="#" class="history">History</a></li>
-        </ul>
-        <img src="../IMG/Phone.svg" alt="Phone" class="phone-icon">
-    </nav>
+      <img src="../IMG/Logo.png" alt="Logo" class="logo">
+      <ul>
+          <li><a href="Home Page.html" class="home" id="Home">Home</a></li>
+          <div class="spacer"></div>
+          <li><a href="#" class="history">History</a></li>
+      </ul>
+      <img src="../IMG/icon.svg" alt="Profile" class="icon">
+  </nav>
 </header>
 
 <div class="lightbox">
@@ -85,12 +96,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 
 <div class="form-container">
-  <form action="search_results.php" method="POST">
+  <form method="POST" action="search.php">
     <div class="form-group">
         <label for="check-in">Check-in</label>
         <div>
             <img src="../img/Calender.svg" alt="Calendar Logo" class="calendar-logo">
-            <input type="date" id="check-in" name="check_in" value="2024-01-01">
+            <input type="date" id="check-in" name="check-in" value="2024-01-01">
         </div>
     </div>
 
@@ -98,25 +109,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label for="check-out">Check-out</label>
         <div>
             <img src="../img/Calender.svg" alt="Calendar Logo" class="calendar-logo">
-            <input type="date" id="check-out" name="check_out" value="2024-01-02">
+            <input type="date" id="check-out" name="check-out" value="2024-01-02">
         </div>
     </div>
 
     <div class="form-group">
-        <label for="rooms">Rooms</label>
-        <select id="rooms" name="rooms">
-            <option value="1">Superior Room</option>
-            <option value="2">Deluxe Room</option>
-            <option value="3">Junior Room</option>
-            <option value="4">Executive Suite</option>
-            <option value="5">Executive Studio</option>
-        </select>
+      <label for="rooms">Rooms</label>
+      <select id="rooms" name="rooms">
+          <?php displayRoomOptions($rooms); ?>
+      </select>
     </div>
 
     <button type="submit" class="search-button">SEARCH</button>
   </form>
 </div>
 
+
+  <button class="search-button" onclick="handleSearch()">SEARCH</button>
+</div>
 
 <div class="welcome_section">
   <img class="logo-image" src="../img/Room & Suites.png" alt="Logo">
@@ -258,7 +268,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <p>Lobby Bar And Lounge</p>
     </div>
     <div class="room-details">
-      <h2>Junior suite</h2>
+      <h2>Junior Room</h2>
       <p class="price">Rp 99/ night</p>
       <div class="features">
         <div class="feature">
@@ -318,7 +328,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <p>Lobby Bar And Lounge</p>
     </div>
     <div class="room-details">
-      <h2>Deluxe Room</h2>
+      <h2>Executive Studio</h2>
       <p class="price">Rp 99/ night</p>
       <div class="features">
         <div class="feature">
@@ -341,37 +351,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </div>
     </div>
   </div>
-
-  <div class="room-info">
-    <div class="room-image">
-      <img src="../IMG/Property 2.svg" alt="Gambar kamar hotel" class="lightbox-trigger">
-      <p>Lobby Bar And Lounge</p>
-    </div>
-    <div class="room-details">
-      <h2>Deluxe Room</h2>
-      <p class="price">Rp 99/ night</p>
-      <div class="features">
-        <div class="feature">
-          <img src="../IMG/Mask group.svg" alt="Twin Bed">
-          <p>2 Twin Bed Or 1 King Bed</p>
-        </div>
-        <div class="feature">
-          <img src="../IMG/Mask group (1).svg" alt="Guests">
-          <p>2 guests</p>
-        </div>
-        <div class="feature">
-          <img src="../IMG/Mask group (2).svg" alt="Area">
-          <p>32.0 m²</p>
-        </div>
-      </div>
-      <div class="buttons">
-        <button><p>Shower</p></button>
-        <button><p>Refrigerator</p></button>
-        <button><p>Air conditioning</p></button>
-      </div>
     </div>
   </div>
 </div>
+
   <h2>Key Features</h2>
   <div class="footer">
     <div class="feature-column">
@@ -439,26 +422,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </button>
     </div>
   </div>
-  
-  
-  <p></p>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="../JS/Home Page.js"></script> <!-- Include JavaScript file -->
 </body>
 </html>
-
-
-
-<?php
-$sarvername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "hotel_management";
-
-$conn = new mysqli($sarvername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-?>
