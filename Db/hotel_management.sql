@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 26 Bulan Mei 2024 pada 07.10
+-- Waktu pembuatan: 26 Bulan Mei 2024 pada 08.58
 -- Versi server: 10.4.28-MariaDB-log
 -- Versi PHP: 8.2.4
 
@@ -32,10 +32,10 @@ CREATE TABLE `bookings` (
   `room_id` int(11) DEFAULT NULL,
   `check_in` date DEFAULT NULL,
   `check_out` date DEFAULT NULL,
-  `fullname` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
+  `fullname` varchar(100) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
-  `bed_type` varchar(100) DEFAULT NULL,
+  `bed_type` varchar(50) DEFAULT NULL,
   `booking_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -163,7 +163,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT untuk tabel `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `rooms`
