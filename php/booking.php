@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('koneksi.php');
+include('koneksi.php'); // Pastikan file ini membuat koneksi dan mendefinisikan $conn
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Ambil data dari formulir pemesanan
@@ -90,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <h2><img src="../IMG/Bosst.svg" alt="Company Logo"> Your booking is guaranteed for a limited time only.</h2>
         </div>
         <p>Make sure all the details on this page are correct before proceeding to payment.</p>
-        <form method="POST" action="pay.php">
+        <form method="POST" action="booking.php">
             <div class="form-group">
                 <label for="fullName">Full Name</label>
                 <input type="text" id="fullName" name="fullName" placeholder="As in Passport/Official ID Card (without title/special characters)">
@@ -133,19 +133,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p>Are the details correct?</p>
         <button class="overlay-button" id="proceedButton">Proceed</button>
     </div>
+</div>
 
-    </div>
 <script>
     document.getElementById('continueButton').addEventListener('click', function(event) {
         event.preventDefault();
         document.getElementById('confirmationOverlay').style.display = 'flex';
     });
     document.getElementById('proceedButton').addEventListener('click', function() {
-    document.getElementById('confirmationOverlay').style.display = 'none';
-    // Redirect ke halaman pembayaran (pay.php)
-    window.location.href = 'pay.php';
+        document.getElementById('confirmationOverlay').style.display = 'none';
+        // Submit form
+        document.querySelector('form').submit();
     });
 </script>
 
 </body>
 </html>
+    

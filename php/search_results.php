@@ -3,18 +3,49 @@ session_start();
 include('Koneksi.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $check_in = $_POST['check_in'];
-    $check_out = $_POST['check_out'];
+    $check_in_raw = $_POST['check_in'];
+    $check_out_raw = $_POST['check_out'];
     $room_type = $_POST['rooms'];
 
-    $sql = "SELECT * FROM rooms WHERE room_type = '$room_type' AND id NOT IN (
-                SELECT room_id FROM bookings 
-                WHERE (check_in <= '$check_out' AND check_out >= '$check_in')
-            )";
+    // Validasi dan format tanggal
+    $check_in = DateTime::createFromFormat('Y-m-d', $check_in_raw);
+    $check_out = DateTime::createFromFormat('Y-m-d', $check_out_raw);
 
-    $result = $conn->query($sql);
+    if (!$check_in || !$check_out) {
+        echo "Invalid date format. Please enter dates in YYYY-MM-DD format.";
+    } else {
+        $check_in = $check_in->format('Y-m-d');
+        $check_out = $check_out->format('Y-m-d');
+
+        $room_type = $conn->real_escape_string($room_type);
+
+        // Query untuk memeriksa ketersediaan kamar berdasarkan tanggal check-in, check-out, dan tipe kamar
+        $sql = "
+            SELECT *
+            FROM rooms
+            WHERE room_type = '$room_type'
+              AND id NOT IN (
+                SELECT room_id
+                FROM room_availability
+                WHERE date BETWEEN '$check_in' AND '$check_out'
+                  AND is_available = 0
+              )";
+        
+        $result = $conn->query($sql);
+        
+        // Menampilkan hasil pencarian
+        if ($result->num_rows > 0) {
+            echo "<h2>Kamar Tersedia</h2>";
+            while ($row = $result->fetch_assoc()) {
+                echo "<p>Kamar " . $row['room_type'] . " tersedia.</p>";
+            }
+        } else {
+            echo "<p>Tidak ada kamar yang tersedia untuk tanggal dan tipe kamar yang dipilih.</p>";
+        }
+    }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
